@@ -1,0 +1,55 @@
+:root {
+  --ink: #1c1c1e; --muted: #6b6b70; --line: #e6e6ea;
+  --accent: #2456a4; --bg: #ffffff; --card: #fafafc;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--ink); background: var(--bg); line-height: 1.65;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+header { padding: 64px 0 28px; text-align: center; }
+h1 { font-size: 2.0rem; font-weight: 600; line-height: 1.25; }
+.authors { margin-top: 14px; color: var(--muted); font-size: 1.05rem; }
+.venue { margin-top: 6px; color: var(--muted); font-style: italic; }
+.links { margin-top: 20px; }
+.links a {
+  display: inline-block; margin: 4px 6px; padding: 8px 20px;
+  border-radius: 22px; background: var(--ink); color: #fff;
+  text-decoration: none; font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.9rem;
+}
+.links a.disabled { background: #b9b9c0; pointer-events: none; }
+section { padding: 30px 0; border-top: 1px solid var(--line); }
+h2 {
+  font-size: 1.45rem; font-weight: 600; margin-bottom: 16px;
+  text-align: center;
+}
+h3 { font-size: 1.1rem; margin: 26px 0 10px; }
+p { margin-bottom: 12px; }
+.abstract p { text-align: justify; }
+video, img.wide { width: 100%; border-radius: 6px; display: block; }
+figure { margin: 18px 0; }
+figcaption {
+  margin-top: 8px; color: var(--muted); font-size: 0.9rem;
+  font-family: Helvetica, Arial, sans-serif; text-align: center;
+}
+.grid { display: grid; gap: 16px; grid-template-columns: repeat(2, 1fr); }
+.grid.g3 { grid-template-columns: repeat(3, 1fr); }
+.grid figure {
+  margin: 0; background: var(--card); border: 1px solid var(--line);
+  border-radius: 8px; padding: 10px;
+}
+.grid img { width: 100%; border-radius: 4px; display: block; }
+@media (max-width: 700px) { .grid, .grid.g3 { grid-template-columns: 1fr; } }
+.note {
+  background: #fff8e6; border: 1px solid #eadfae; border-radius: 8px;
+  padding: 12px 16px; font-size: 0.92rem;
+  font-family: Helvetica, Arial, sans-serif;
+}
+footer {
+  border-top: 1px solid var(--line); margin-top: 30px;
+  padding: 26px 0 44px; color: var(--muted); font-size: 0.85rem;
+  font-family: Helvetica, Arial, sans-serif; text-align: center;
+}
+footer a { color: var(--muted); }

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan-to-Clone: Planning-Driven Data Distribution Design for Contact-Rich Manipulation</title>
+<link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+
+<header class="wrap">
+  <h1>Plan-to-Clone: Planning-Driven Data Distribution Design<br>for Contact-Rich Manipulation</h1>
+  <p class="authors">Manabu Nishiura<sup>1</sup> &nbsp; Alex Alspach<sup>2</sup> &nbsp; Aykut &Ouml;zg&uuml;n &Ouml;nol<sup>2</sup></p>
+  <p class="authors"><sup>1</sup>Frontier Research Center, Toyota Motor Corporation &nbsp;&nbsp; <sup>2</sup>Toyota Research Institute</p>
+  <p class="venue">IEEE Robotics and Automation Letters (RA-L), 2026</p>
+  <div class="links">
+    <a class="disabled" href="#">Paper (IEEE Xplore, coming soon)</a>
+    <a href="#video">Video</a>
+    <a href="#supplementary">Supplementary figures</a>
+    <a href="#bibtex">BibTeX</a>
+  </div>
+</header>
+
+<section id="video" class="wrap">
+  <h2>Supplementary Video</h2>
+  <video controls muted playsinline preload="metadata"
+         src="static/videos/supplementary.mp4"></video>
+  <figcaption>3:00 overview: planner-in-the-loop demonstration generation,
+  recovery behaviors, and the three-task dataset-composition study.
+  No audio; on-screen captions.</figcaption>
+</section>
+
+<section class="wrap abstract">
+  <h2>Abstract</h2>
+  <p>Learning robust policies for contact-rich manipulation remains
+  challenging due to the difficulty of collecting demonstrations that
+  adequately capture complex contact transitions and recovery behaviors.
+  Existing imitation learning methods often rely on human teleoperation,
+  which is costly, difficult to scale, and provides limited coverage of rare
+  but critical corrective behaviors. We propose a planner-in-the-loop
+  demonstration synthesis framework that autonomously generates long-horizon,
+  contact-rich manipulation trajectories without teleoperation. Our method
+  couples a global contact-implicit planner for high-level task reasoning
+  with a contact-implicit model predictive controller that enforces dynamic
+  feasibility and systematically injects disturbances during execution.
+  This integration not only ensures physical consistency, but also enables
+  controlled shaping of the training data distribution by generating
+  structured recovery behaviors. In real-world experiments, the distilled
+  policies execute from proprioceptive, visual, and tactile observations,
+  without motion tracking required by direct planner execution. Through
+  simulated and real-world experiments on simple maze, spinner, box pushing
+  and rotating, bimanual lifting, balancing, and whole-body manipulation, we
+  demonstrate that the proposed framework produces feasible and diverse
+  datasets that yield policies capable of robust closed-loop contact
+  interaction. Controlled ablations further show that recovery data improves
+  policy robustness while it expands the effectively demonstrated state
+  coverage; once coverage saturates, additional recovery data can displace
+  nominal supervision and degrade performance, underscoring data-distribution
+  design in contact-rich imitation learning.</p>
+</section>
+
+<section class="wrap">
+  <h2>Framework</h2>
+  <figure>
+    <img class="wide" src="static/images/framework.png" alt="Framework overview">
+    <figcaption>GQDP global planning, contact-implicit trajectory
+    optimization, and CI-MPC generate nominal and disturbance-induced
+    recovery demonstrations; mixing them at ratio <i>r</i> shapes the
+    training distribution of a behavior-cloned visuomotor policy.</figcaption>
+  </figure>
+</section>
+
+<section class="wrap">
+  <h2>Key Result: Coverage Expansion and Saturation</h2>
+  <p>The recovery-data ratio is not itself the governing variable. What
+  matters is whether additional recovery demonstrations expand useful state
+  coverage or merely replace nominal supervision after coverage has
+  saturated.</p>
+  <div class="grid">
+    <figure>
+      <img src="static/images/fig_ratio_occupancy.png" alt="Support occupancy">
+      <figcaption>Breadth of the demonstrated support, relative to
+      <i>r</i>=0. On the maze, coverage saturates early; on the short-horizon
+      tasks it keeps expanding.</figcaption>
+    </figure>
+    <figure>
+      <img src="static/images/fig_ratio_performance_normdist.png"
+           alt="Normalized performance">
+      <figcaption>Median distance to the goal, relative to <i>r</i>=0
+      (lower is better). Stars mark each task's best ratio: the maze exhibits
+      an interior optimum at <i>r</i>=50%.</figcaption>
+    </figure>
+  </div>
+  <div class="grid" style="margin-top:16px">
+    <figure>
+      <img src="static/images/fig_magnitude_geodesic.png"
+           alt="Disturbance magnitude">
+      <figcaption>Disturbance-magnitude axis (maze): medium and mixed
+      magnitudes form the best group; severity alone is not monotonically
+      beneficial.</figcaption>
+    </figure>
+    <figure>
+      <img src="static/images/fig_a1_noise_delay_paper.png"
+           alt="Planner vs policy">
+      <figcaption>Planner vs. distilled policy under state-estimation noise
+      and observation delay: distillation changes, rather than uniformly
+      improves, the robustness profile.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section id="supplementary" class="wrap">
+  <h2>Supplementary Figures</h2>
+  <p class="note">Additional visualizations that did not fit in the paper.
+  Click any figure to open the full-resolution image.</p>
+
+  <h3>Demonstration pools: trajectory overlays</h3>
+  <p>Nominal (gray) and recovery (colored) demonstrations overlaid in task
+  space. Recovery trajectories traverse novel states before rejoining the
+  nominal corridor.</p>
+  <div class="grid g3">
+    <figure><a href="static/images/spinner_traj_overlay.png"><img src="static/images/spinner_traj_overlay.png" alt=""></a>
+      <figcaption>Spinner</figcaption></figure>
+    <figure><a href="static/images/jaco_v2_traj_overlay.png"><img src="static/images/jaco_v2_traj_overlay.png" alt=""></a>
+      <figcaption>Jaco box push and rotate</figcaption></figure>
+    <figure><a href="static/images/allegro_traj_overlay.png"><img src="static/images/allegro_traj_overlay.png" alt=""></a>
+      <figcaption>Allegro in-hand rotation (exploratory)</figcaption></figure>
+  </div>
+
+  <h3>Training-set state density vs. recovery ratio</h3>
+  <p>State-space density of the mixed datasets as the recovery ratio
+  <i>r</i> increases from 0% to 100%.</p>
+  <div class="grid">
+    <figure><a href="static/images/spinner_ratio_density.png"><img src="static/images/spinner_ratio_density.png" alt=""></a>
+      <figcaption>Spinner</figcaption></figure>
+    <figure><a href="static/images/jaco_ratio_density.png"><img src="static/images/jaco_ratio_density.png" alt=""></a>
+      <figcaption>Jaco box push and rotate</figcaption></figure>
+    <figure><a href="static/images/planar_ratio_density.png"><img src="static/images/planar_ratio_density.png" alt=""></a>
+      <figcaption>Simple Maze</figcaption></figure>
+    <figure><a href="static/images/allegro_ratio_density.png"><img src="static/images/allegro_ratio_density.png" alt=""></a>
+      <figcaption>Allegro (exploratory)</figcaption></figure>
+  </div>
+
+  <h3>Dataset overlays by recovery ratio</h3>
+  <div class="grid">
+    <figure><a href="static/images/spinner_ratio_datasets_overlay.png"><img src="static/images/spinner_ratio_datasets_overlay.png" alt=""></a>
+      <figcaption>Spinner</figcaption></figure>
+    <figure><a href="static/images/jaco_ratio_datasets_overlay.png"><img src="static/images/jaco_ratio_datasets_overlay.png" alt=""></a>
+      <figcaption>Jaco box push and rotate</figcaption></figure>
+    <figure><a href="static/images/planar_ratio_datasets_overlay.png"><img src="static/images/planar_ratio_datasets_overlay.png" alt=""></a>
+      <figcaption>Simple Maze</figcaption></figure>
+    <figure><a href="static/images/planar_level_datasets_overlay.png"><img src="static/images/planar_level_datasets_overlay.png" alt=""></a>
+      <figcaption>Simple Maze: disturbance-magnitude pools (none/S/M/L)</figcaption></figure>
+  </div>
+
+  <h3>Evaluation rollout densities (Simple Maze)</h3>
+  <p>State density of policy rollouts under each evaluation condition;
+  columns are training ratios 0&ndash;100%.</p>
+  <div class="grid">
+    <figure><a href="static/images/planar_eval_density_none.png"><img src="static/images/planar_eval_density_none.png" alt=""></a>
+      <figcaption>Eval: no disturbance</figcaption></figure>
+    <figure><a href="static/images/planar_eval_density_small.png"><img src="static/images/planar_eval_density_small.png" alt=""></a>
+      <figcaption>Eval: small disturbances</figcaption></figure>
+    <figure><a href="static/images/planar_eval_density_medium.png"><img src="static/images/planar_eval_density_medium.png" alt=""></a>
+      <figcaption>Eval: medium disturbances</figcaption></figure>
+    <figure><a href="static/images/planar_eval_density_large.png"><img src="static/images/planar_eval_density_large.png" alt=""></a>
+      <figcaption>Eval: large disturbances</figcaption></figure>
+  </div>
+
+  <h3>Geodesic distance field</h3>
+  <div class="grid">
+    <figure><a href="static/images/geodesic_field.png"><img src="static/images/geodesic_field.png" alt=""></a>
+      <figcaption>Free-space shortest-path (geodesic) distance to the goal,
+      computed by Dijkstra on an occupancy grid with the wall inflated by the
+      box half-extents. Euclidean distance mis-orders progress before the
+      wall is rounded.</figcaption></figure>
+  </div>
+</section>
+
+<section id="bibtex" class="wrap">
+  <h2>BibTeX</h2>
+  <pre style="background:#fafafc;border:1px solid #e6e6ea;border-radius:8px;padding:14px;overflow-x:auto;font-size:0.85rem">@article{nishiura2026plantoclone,
+  author  = {Nishiura, Manabu and Alspach, Alex and {\"O}nol, Aykut {\"O}zg{\"u}n},
+  title   = {Plan-to-Clone: Planning-Driven Data Distribution Design
+             for Contact-Rich Manipulation},
+  journal = {IEEE Robotics and Automation Letters},
+  year    = {2026}
+}</pre>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>This page provides supplementary material for the published article
+    above. Contents might be updated or deleted without notice regarding the
+    original manuscript update and policy change.</p>
+    <p>Page design inspired by the
+    <a href="https://nerfies.github.io/">Nerfies</a> project page.
+    Page source is released under the MIT License; figures and videos are
+    &copy; 2026 the authors.</p>
+  </div>
+</footer>
+
+</body>
+</html>
